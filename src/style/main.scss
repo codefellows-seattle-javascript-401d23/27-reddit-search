@@ -1,4 +1,5 @@
 $background-color: #444;
+$list-background: #aaa;
 $font-color: #fff;
 $error: #ff0000;
 $font-family: Verdana;
@@ -16,6 +17,27 @@ form {
     margin: 10px;
     width: 100px;
   }
+}
+
+img {
+  height: 100px;
+}
+
+a {
+  text-decoration: none;
+  color: $font-color;
+}
+
+ul {
+  padding: 0px;
+  margin: 0px;
+}
+
+li {
+  list-style: none;
+  background: $list-background;
+  padding: 10px;
+  margin: 10px auto;
 }
 
 .error {

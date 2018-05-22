@@ -5,8 +5,6 @@ import superagent from 'superagent';
 import { render as reactDOMRender } from 'react-dom';
 import './style/main.scss';
 
-// const apiUrl = `http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`
-
 class SearchForm extends React.Component {
   constructor(props) {
     super(props);
@@ -30,6 +28,7 @@ class SearchForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     this.props.subredditSearch(this.state.subreddit, this.state.numberOfResults);
+    this.setState({ subreddit: '', numberOfResults: '' });
   }
 
   render() {
@@ -59,13 +58,29 @@ class SearchForm extends React.Component {
   }
 }
 
-// {/*<div>*/}
-// {/*<h2 className='error'>*/}
-// {/*{ `"${this.state.pokemonNameError}"` } does not exist. Please make another request.*/}
-// {/*</h2>*/}
-// {/*</div> :*/}
-
 class SearchResultList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.renderSearchResults = this.renderSearchResults.bind(this);
+  }
+
+  renderSearchResults(results) {
+    return (
+      <ul>
+        { results.map((result, index) => {
+          return (
+            <a href={result.url} key={index}><li>
+              <img src={result.thumbnail}/>
+              <h4>{result.title}</h4>
+              <p>OP: {result.author}</p>
+              <p>UPS: {result.ups}</p>
+            </li></a>
+        );
+        })}
+      </ul>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -73,11 +88,11 @@ class SearchResultList extends React.Component {
           this.props.searchResults ?
             <div>
               <h2>Results:</h2>
-
+              { this.renderSearchResults(this.props.searchResults) }
             </div> :
             <div>
               <h2 className='error'>
-                { `"${this.props.error}"` } does not exist
+                { `"${this.props.subError}"` } does not exist or has less than { this.props.numError } posts.
               </h2>
             </div>
         }
@@ -91,7 +106,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       topics: [],
-      searchError: null,
+      subredditError: null,
+      numberError: null,
     };
     this.subredditSearch = this.subredditSearch.bind(this);
   }
@@ -124,18 +140,19 @@ class App extends React.Component {
             title: result.data.title,
             url: result.data.url,
             thumbnail: result.data.preview.images[0].source.url,
+            ups: result.data.ups,
           });
         });
         try {
           localStorage.searchResults = JSON.stringify(searchResults);
-          this.setState({ topics: searchResults, searchError: null });
+          this.setState({ topics: searchResults, subredditError: null, numberError: null });
         } catch (err) {
           console.error(err); // eslint-disable-line
         }
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ topics: null, searchError: subreddit });
+        this.setState({ topics: null, subredditError: subreddit, numberError: num });
       }); // eslint-disable-line
   }
 
@@ -146,7 +163,11 @@ class App extends React.Component {
         <p>In the form below, please enter the subreddit name and number of search
           results you would like to receive</p>
         <SearchForm subredditSearch={this.subredditSearch}/>
-        <SearchResultList searchResults={this.state.topics} error={this.state.searchError}/>
+        <SearchResultList
+          searchResults={this.state.topics}
+          subError={this.state.subredditError}
+          numError={this.state.numberError}
+        />
       </div>
     );
   }

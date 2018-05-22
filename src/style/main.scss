@@ -1,10 +1,21 @@
 $background-color: #444;
 $font-color: #fff;
 $error: #ff0000;
+$font-family: Verdana;
 
 html, body {
   background: $background-color;
   color: $font-color;
+  font-family: $font-family;
+}
+
+form {
+  margin: 10px;
+
+  input {
+    margin: 10px;
+    width: 100px;
+  }
 }
 
 .error {

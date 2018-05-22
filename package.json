@@ -1,5 +1,5 @@
 {
-  "name": "27-reddit-search",
+  "name": "lab-27",
   "version": "1.0.0",
   "description": "Mike Castor's 401d23 Lab 27",
   "main": "index.js",
@@ -38,6 +38,7 @@
     "react-dom": "^16.3.2",
     "sass-loader": "^7.0.1",
     "style-loader": "^0.21.0",
+    "superagent": "^3.8.3",
     "webpack": "^4.8.3",
     "webpack-cli": "^2.1.3",
     "webpack-dev-server": "^3.1.4",

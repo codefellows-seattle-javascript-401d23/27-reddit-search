@@ -16,6 +16,10 @@ webpackDevConfig.devServer = {
   historyApiFallback: true,
 };
 
+webpackDevConfig.plugins = [
+    new HotModuleReplacementPlugin(),
+];
+
 webpackDevConfig.module = {};
 
 webpackDevConfig.module.rules = [

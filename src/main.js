@@ -5,26 +5,26 @@ import { render as reactDomRender } from 'react-dom';
 import superagent from 'superagent';
 import './style/main.scss';
 
-const apiUrl = 'https://pokeapi.co/api/v2/pokemon';
+const apiUrl = 'http://reddit.com/r';
 
-class PokemonSearchForm extends React.Component {
+class RedditSearchForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pokeName: '',
+      subReddit: '',
     };
 
-    this.handlePokemonNameChange = this.handlePokemonNameChange.bind(this);
+    this.handleSubRedditNameChange = this.handleSubRedditNameChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handlePokemonNameChange(event) {
-    this.setState({ pokeName: event.target.value });
+  handleSubRedditNameChange(event) {
+    this.setState({ subReddit: event.target.value });
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.pokemonSelect(this.state.pokeName);
+    this.props.redditSelected(this.state.subReddit);
   }
 
   render() {
@@ -32,10 +32,10 @@ class PokemonSearchForm extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <input
           type='text'
-          name='pokemonName'
-          placeholder='search for Pokemon here'
-          value={this.state.pokeName}
-          onChange={this.handlePokemonNameChange}
+          name='searchFormBoard'
+          placeholder='search for reddit here'
+          value={this.state.subReddit}
+          onChange={this.handleSubRedditNameChange}
           />
       </form>
     );
@@ -46,13 +46,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pokemonLookup: {},
-      pokemonSelect: null,
-      pokemonNameError: null,
+      redditLookup: {},
+      redditSelect: null,
+      redditNameError: null,
+      topics: [],
     };
 
-    this.pokemonSelect = this.pokemonSelect.bind(this);
-    this.renderAbilitiesList = this.renderAbilitiesList.bind(this);
+    this.redditSelect = this.redditSelect.bind(this);
+    this.renderSubRedditList = this.renderSubRedditList.bind(this);
   }
 
   componentDidUpdate() {
@@ -60,10 +61,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    if (localStorage.pokemonLookup) {
+    if (localStorage.redditLookup) {
       try {
-        const pokemonLookup = JSON.parse(localStorage.pokemonLookup);
-        return this.setState({ pokemonLookup });
+        const redditLookup = JSON.parse(localStorage.redditLookup);
+        return this.setState({ redditLookup: redditLookup });
         // return undefined????
       } catch (err) {
         return console.error(err, 'line 69');
@@ -72,14 +73,14 @@ class App extends React.Component {
       return superagent.get(apiUrl)
         .then((response) => {
           console.log(response, 'line 74');
-          const pokemonLookup = response.body.results.reduce((dict, result) => {
+          const redditLookup = response.body.results.reduce((dict, result) => {
             dict[result.name] = result.url;
             return dict;
           }, {});
 
           try {
-            localStorage.pokemonLookup = JSON.stringify(pokemonLookup);
-            this.setState({ pokemonLookup });
+            localStorage.redditLookup = JSON.stringify(redditLookup);
+            this.setState({ redditLookup: redditLookup });
           } catch (err) {
             console.log(err, 'line 84');
           }
@@ -88,18 +89,18 @@ class App extends React.Component {
     }
   }
 
-  pokemonSelect(name) {
-    if (!this.state.pokemonLookup[name]) {
+  redditSelect(name) {
+    if (!this.state.redditLookup[name]) {
       this.setState({
-        pokemonSelected: null,
-        pokemonNameError: name,
+        redditSelected: null,
+        redditNameError: name,
       });
     } else {
-      return superagent.get(this.state.pokemonLookup[name])
+      return superagent.get(this.state.redditLookup[name])
         .then((response) => {
           this.setState({
-            pokemonSelected: response.body,
-            pokemonNameError: null,
+            redditSelected: response.body,
+            redditNameError: null,
           });
         })
         .catch(console.error, 'line 105');
@@ -107,13 +108,13 @@ class App extends React.Component {
     return undefined;
   }
 
-  renderAbilitiesList(pokemon) {
+  renderSubRedditList(subReddit) {
     return (
       <ul>
-        { pokemon.abilities.map((item, index) => {
+        { subReddit.map((item, index) => {
           return (
             <li key={index}>
-              <p>{item.ability.name}</p>
+              <p>{item.sub.name}</p>
             </li>
           );
         })}
@@ -124,31 +125,31 @@ class App extends React.Component {
   render() {
     return (
       <section>
-        <h1>Pokemon Search Form</h1>
-        <PokemonSearchForm
-          pokemonSelect={this.pokemonSelect}
+        <h1>Reddit Search Form</h1>
+        <RedditSearchForm
+          redditSelect={this.redditSelect}
           />
         {
-          this.state.pokemonNameError ?
+          this.state.redditNameError ?
             <div>
               <h2 className="error">
-                { `'${this.state.pokemonNameError}'`}does not exist.
+                { `'${this.state.redditNameError}'`}does not exist.
                 Please make another request.
               </h2>
             </div> :
             <div>
             {
-              this.state.pokemonSelected ?
+              this.state.redditSelected ?
               <div>
                 <div>
-                  <img src={this.state.pokemonSelected.sprites.front_default} />
+                  <img src={this.state.redditSelected} />
                 </div>
-                <h2>Selected: {this.state.pokemonSelected.name}</h2>
-                <h3>Abilities:</h3>
-                { this.renderAbilitiesList(this.state.pokemonSelected)}
+                <h2>Selected: {this.state.redditSelected}</h2>
+                <h3>SubReddits:</h3>
+                { this.renderSubRedditList(this.state.redditSelected)}
               </div> :
                 <div>
-                  Please make a request to see pokemon data.
+                  Please make a request to see subReddits.
                 </div>
             }
             </div>

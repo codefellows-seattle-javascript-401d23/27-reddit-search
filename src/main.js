@@ -93,7 +93,7 @@ class App extends React.Component {
         return console.error(err);
       }
     } else {
-    return superagent.get(`https://reddit.com/r/cat.json?limit=10`)
+    return superagent.get(`https://reddit.com/r/rabbits.json?limit=1`)
         .then((response) => {
           console.log('API res: ', response);
         });

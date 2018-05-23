@@ -47,7 +47,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       pokemonLookup: {},
-      pokemonSelected: null,
+      pokemonSelect: null,
       pokemonNameError: null,
     };
 
@@ -56,7 +56,7 @@ class App extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log('__UPDATED STATE__', this.state);
+    console.log('__UPDATED STATE__line 59', this.state);
   }
 
   componentDidMount() {
@@ -66,12 +66,12 @@ class App extends React.Component {
         return this.setState({ pokemonLookup });
         // return undefined????
       } catch (err) {
-        return console.error(err);
+        return console.error(err, 'line 69');
       }
     } else {
       return superagent.get(apiUrl)
         .then((response) => {
-          console.log(response);
+          console.log(response, 'line 74');
           const pokemonLookup = response.body.results.reduce((dict, result) => {
             dict[result.name] = result.url;
             return dict;
@@ -81,10 +81,10 @@ class App extends React.Component {
             localStorage.pokemonLookup = JSON.stringify(pokemonLookup);
             this.setState({ pokemonLookup });
           } catch (err) {
-            console.log(err);
+            console.log(err, 'line 84');
           }
         })
-        .catch(console.error);
+        .catch(console.error, 'line 87');
     }
   }
 
@@ -102,7 +102,7 @@ class App extends React.Component {
             pokemonNameError: null,
           });
         })
-        .catch(console.error);
+        .catch(console.error, 'line 105');
     }
     return undefined;
   }
@@ -126,7 +126,7 @@ class App extends React.Component {
       <section>
         <h1>Pokemon Search Form</h1>
         <PokemonSearchForm
-          pokemonSElect={this.pokemonSelect}
+          pokemonSelect={this.pokemonSelect}
           />
         {
           this.state.pokemonNameError ?
@@ -141,7 +141,7 @@ class App extends React.Component {
               this.state.pokemonSelected ?
               <div>
                 <div>
-                  <img src={this.state.pokemonSelected.sprites.font_default} />
+                  <img src={this.state.pokemonSelected.sprites.front_default} />
                 </div>
                 <h2>Selected: {this.state.pokemonSelected.name}</h2>
                 <h3>Abilities:</h3>

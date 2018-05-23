@@ -1,50 +1,52 @@
-![cf](http://i.imgur.com/7v5ASc8.png) 27: Reddit Search Engine
-===
+# 26-frontend-tooling-react
+**Author**: Lacy Hogan
+**Version**: 1.0.0 
 
-## Submission Instructions
-  * Work in a fork of this repository
-  * Work in a branch on your fork
-  * Submit a pull request to this repository
-  * Submit a link to your pull request on canvas
-  * Submit a question, observation, and how long you spent on canvas  
-  
-## Learning Objectives  
-* Students will learn to manage controlled inputs
-* Students will learn to pass data from parent to child through props
+## Overview
+This application uses React.js to display a cow with a random generated word that can be changed by clicking on a button.
 
-## Requirements  
-#### Feature Tasks 
-Create the following components and structure them according to the following diagram 
-```
-App
-  SearchForm
-  SearchResultList
-``` 
-###### App Component
-* should contain all of the **application state** 
-* should contain methods for modifying the application state
-* the state should have a topics array for holding the results of the search
+## Getting Started
+The following devDependencies need to be installed:
+  "babel-core": "^6.26.3",
+  "babel-eslint": "^8.2.3",
+  "babel-loader": "^7.1.4",
+  "babel-preset-env": "^1.7.0",
+  "babel-preset-react": "^6.24.1",
+  "babel-preset-stage-0": "^6.24.1",
+  "css-loader": "^0.28.11",
+  "dotenv": "^5.0.1",
+  "eslint": "^4.19.1",
+  "eslint-config-airbnb-base": "^12.1.0",
+  "eslint-plugin-import": "^2.12.0",
+  "eslint-plugin-jest": "^21.15.1",
+  "eslint-plugin-react": "^7.8.2",
+  "html-webpack-plugin": "^3.2.0",
+  "node-sass": "^4.9.0",
+  "react": "^16.3.2",
+  "react-dom": "^16.3.2",
+  "sass-loader": "^7.0.1",
+  "style-loader": "^0.21.0",
+  "webpack": "^4.8.3",
+  "webpack-cli": "^2.1.3",
+  "webpack-dev-server": "^3.1.4",
+  "webpack-merge": "^4.1.2"
 
-###### SearchForm Component
-* should contain a text input for the user to supply a reddit board to look up
-* should contain a number input for the user to limit the number of results to return 
-  * the number must be more than 0 and less than 100
-  * `onSubmit` the form should make a request to reddit 
-  * it should make a get request to `http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`
-  * on success it should pass the results to the application state
-  * on failure it should add a class to the form called error and turn the form's inputs borders red
+The following dependencies need to be installed:
+  "cowsay-browser": "^1.1.8",
+  "faker": "^4.1.0"
 
-###### SearchResultList Component
-* Should inherit all search results through props
-* This component does not need to have its own state
-* If there are topics in the application state it should display an unordered list 
-* Each list item in the unordered list should contain the following
-  * an anchor tag with a href to the topic.url 
-    * inside the anchor a heading tag with the topic.title 
-    * inside the anchor a p tag with the number of topic.ups 
+A .env file must include:
+  CDN_URL=/
 
-#### Test
-* no testing today
+package.json scripts must include:
+  "watch": "webpack-dev-server --config webpack.dev.js"
 
-#### Documentation  
-Write a description of the project in your README.md
+To start the server, enter `npm run watch` in your terminal
+
+## Architecture
+This application uses JavaScript and React library and sass library 
+
+## Change Log
+05-21-2018 4:00pm Application full functional 
+
+## Credits and Collaborations

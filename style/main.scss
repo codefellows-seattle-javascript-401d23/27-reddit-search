@@ -1,0 +1,23 @@
+$background-color: #ffffff;
+$header-color: #0000ff;
+$font-color: #000000;
+$error: #ff0000;
+$font-fam: Arial, Helvetica, sans-serif;
+
+
+html, body {
+  background: $background-color;
+
+}
+p,h1,h2,ul, pre, label, form {
+  color: $font-color;
+  font-family: $font-fam; 
+}
+h1 {
+  color: $header-color;
+}
+.error {
+  border: 1px solid $error;
+  color: $error;
+}
+

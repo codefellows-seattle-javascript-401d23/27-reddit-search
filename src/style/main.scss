@@ -1,0 +1,15 @@
+$background-color: #fff000;
+$font-color: #FFFFFF;
+$error: #ff0000;
+
+html, body {
+  background: $background-color;
+}
+
+p, h1, h2, ul, pre {
+  color: $font-color;
+}
+
+.error {
+  color: $error;
+}

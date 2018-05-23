@@ -5,29 +5,35 @@ import superagent from 'superagent';
 
 import '../style/main.scss';
 
-const searchFormBoard = 'cats';
-const searchFormLimit = 5;
+;let searchFormBoard = 'cats';
+let searchFormLimit = 5;
 
 const apiUrl = `http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`;
 
 
 class SearchForm extends React.Component {
-  handleSubmit() {
-
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   render() {
     return (
       <div>
-        <h3>Search Form Goes Here.</h3>
-        <form>
+        <h3>Search Form</h3>
+        <form onSubmit={this.handleSubmit()}>
           <input
           type='text'
           name='redditBoard'
           placeholder='Search for a Reddit board'
           />
+          <button type='submit'>Submit</button>
         </form>
       </div>
     );
+  }
+
+  handleSubmit() {
+    console.log('handleSubmit');
   }
 }
 
@@ -35,7 +41,7 @@ class SearchResultList extends React.Component {
   render() {
     return (
       <div>
-        <h3>Search Results Go Here.</h3>
+        <h3>Search Results</h3>
         <ul>
           {this.props.topicslist.map((article, index) => {
             return (
@@ -55,7 +61,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      topics: ['topic'],
+      topics: ['topic1', 'topic2'],
     };
     this.getTopics = this.getTopics.bind(this);
   }
@@ -65,6 +71,7 @@ class App extends React.Component {
       .then((response) => {
         this.setState({
           topics: response.body.data.children,
+        //  topics: ['a', 'b', 'c'],
         });
       })
       .catch(console.error);

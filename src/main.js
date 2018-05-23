@@ -1,6 +1,6 @@
 import React from 'react';
 import { render as reactDomRender } from 'react-dom';
-// import superagent from 'superagent';
+import superagent from 'superagent';
 import '../style/main.scss';
 
 // const apiURL = `https://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`;
@@ -49,7 +49,6 @@ class RedditSearchForm extends React.Component {
               value={this.state.redditBoardName}
               onChange={this.handleBoardChange}
               />
-          <button type='submit'>Submit</button>
         </form>
     );
   }
@@ -77,11 +76,50 @@ class App extends React.Component {
       redditBoardSelected: null,
       redditBoardError: null,
     };
+
+    this.redditBoardSelect = this.redditBoardSelect.bind(this);
   }
 
   componentDidUpdate() {
     console.log('__UPDATE STATE__', this.state);
   }
+
+  componentDidMount() {
+    if (localStorage.boardLookup) {
+      try {
+        const boardLookup = JSON.parse(localStorage.boardLookup);
+        return this.setState({boardLookup});
+      } catch (err) {
+        return console.error(err);
+      }
+    } else {
+    return superagent.get(`https://reddit.com/r/cat.json?limit=10`)
+        .then((response) => {
+          console.log('API res: ', response);
+        });
+    }
+  }
+
+  redditBoardSelect(searchInfo) {
+    if (!this.state.boardLookup[searchInfo]) {
+      this.setState({
+        redditBoardSelected: null,
+        redditBoardError: searchInfo,
+      });
+    } else {
+      return superagent.get(this.state.boardLookup[searchInfo])
+        .then((response) => {
+          this.setState({
+            redditBoardSelected: response.body,
+            redditBoardError: null,
+          });
+        })
+        .catch(console.error);
+    }
+    return undefined;
+  }
+
+
 
 
 

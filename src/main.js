@@ -47,17 +47,15 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      boardLookup: [],
+      boardLookup: {},
       redditBoardSelected: null,
       redditBoardError: null,
-    }
-
-    render()
-    {
-    return (
-        <RedditSearchForm />
+    };
+  }
+  render() {
+  return (
+      <RedditSearchForm />
     );
-    }
   }
 }
 

@@ -11,8 +11,8 @@ p, h1, h2, ul {
   color: $font-color;
 }
 
-.error {
-  color: $error;
+.error  input {
+  border: 3px solid red;
 }
 
 .search-form {

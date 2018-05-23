@@ -22,9 +22,8 @@ html, body {
 
 header {
   background: $reddit-blue;
+  border: 1px dashed $reddit-grey;
   height: 80px;
-  line-height: 80px;
-  vertical-align: center;
   text-align: center;
   font-size: $large-font;
 }
@@ -55,6 +54,7 @@ ul {
     padding: 10px;
     text-align: left;
     margin: 10px auto;
+    border: 1px dashed $reddit-grey;
 
     h4, p, a {
       margin: 5px auto;

@@ -14,7 +14,7 @@ webpackConfig.output = {
   publicPath: process.env.CDN_URL,
 };
 
-webpackConfig.plugin = [
+webpackConfig.plugins = [
     new HtmlWebpackPlugin({
       title: 'Josh Lab 27'
     }),
@@ -36,7 +36,7 @@ webpackConfig.module.rules = [
       options: {
         presets: ['env', 'stage-o', 'react'],
         plugins: ['transform-react-jsx-source'],
-        cascheDirectory: true,
+        cacheDirectory: true,
       },
     },
   },

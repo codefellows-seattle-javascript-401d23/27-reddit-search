@@ -4,13 +4,14 @@ import superagent from superagent;
 import './style/main.scss';
 
 // const apiURL = `https://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`;
-// TODO refactor the above line
+// TODO use the above line for final lab
 
 class redditSearchForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       redditBoardName: '',
+      returnResults: '',
     };
 
     this.handleBoardNameChange = this.handleBoardNameChange.bind(this);
@@ -19,24 +20,35 @@ class redditSearchForm extends React.Component {
 
 
   handleBoardNameChange(event) {
-    this.setState({redditBoardName: event.target.value});
+    this.setState({ redditBoardName: event.target.value });
+    // this.setState({ returnResults: event.target.value }); ------- TODO setup returnResults
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
-    this.props.redditBoardSelect(this.state.redditBoardName); ---------------------comback here!!
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.redditBoardSelect(this.state.redditBoardName); // this takes in a function to
+    // change state.  redditBoardSelect is taking in the logic
   }
 
   render() {
     return (
         <form onSubmit={this.handleSubmit}>
           <input
-            type='type'
+            type='text'
             name='redditBoardName'
             placeholder='Search for a reddit Board'
             value={this.state.redditBoardName}
             onChange={this.handleBoardNameChange}
             />
+          {/*<input*/}
+            {/*type='number'*/}
+            {/*name='returnResults'*/}
+            {/*placeholder='1 - 100'*/}
+            {/*min='1'*/}
+            {/*max='100'*/}
+            {/*value={this.state.returnResults}*/}
+            {/*onChange={this.handleBoardNameChange}*/}
+            {/*/>       ------------------------------- TODO setup returnResults*/}
         </form>
     );
   }
@@ -46,9 +58,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      boardLookup: {},
+      boardLookup: [],
       redditBoardSelected: null,
-      redditBoardName: null,
+      redditBoardNameError: null,
     };
 
     //  binding happens here!!! ----------------------------------------
@@ -62,7 +74,7 @@ class App extends React.Component {
     if (localStorage.redditBoardLookup) {
       try {
         const redditBoardLookup = JSON.parse(localStorage.redditBoardLookup);
-        return this.setState({pokemonLookup});
+        return this.setState({redditBoardLookup});
       } catch (err) {
         return console.error(err);
       }
@@ -93,11 +105,11 @@ class App extends React.Component {
       pokemonNameError: name,
       });
     } else {
-      return superagent.get(this.state.pokemonLookup[name])
+      return superagent.get(this.state.redditBoardLookup[name])
         .then((response) => {
           this.setState({
-            pokemonSelected: response.body,
-            pokemonNameError: null,
+            redditBoardSelected: response.body,
+            redditBoardNameError: null,
           });
         })
         .catch(console.error);
@@ -105,52 +117,50 @@ class App extends React.Component {
     return undefined;
   }
 
-  renderAbilitiesList(pokemon) {
-    return (
-        <ul>
-          { pokemon.abilities.map((item, index) => {
-            return (
-                <li key={index}>
-                  <p>{item.ability.name}</p>
-                </li>
-            );
-          })}
-        </ul>
-    );
-  }
+  // renderAbilitiesList(redditBoard) {
+  //   return (
+  //       <ul>
+  //         { redditBoard.abilities.map((item, index) => {
+  //           return (
+  //               <li key={index}>
+  //                 <p>{item.ability.name}</p>
+  //               </li>
+  //           );
+  //         })}
+  //       </ul>
+  //   );
+  // }
 
   render() {
     return (
         <section>
-          <h1>Pokemon Form Demo</h1>
-          <PokemonSearchForm
-              pokemonSelect={this.pokemonSelect}
-          />
-          {
-            this.state.pokemonNameError ?
-                <div>
-                  <h2 className="error">
-                    { `"${this.state.pokemonNameError}"`} does not exist.
-                    Please make another request.
-                  </h2>
-                </div> :
-                <div>
-                  {
-                    this.state.pokemonSelected ?
-                        <div>
-                          <div>
-                            <img src={this.state.pokemonSelected.sprites.front_default} />
-                          </div>
-                          <h2>Selected: {this.state.pokemonSelected.name}</h2>
-                          <h3>Abilities:</h3>
-                          { this.renderAbilitiesList(this.state.pokemonSelected)}
-                        </div> :
-                        <div>
-                          Please make a request to see pokemon data.
-                        </div>
-                  }
-                </div>
-          }
+          <h1>Reddit Board Form</h1>
+          <RedditSearchForm />
+          {/*<RedditSearchForm*/}
+              {/*redditSelect={this.redditSelect}*/}
+          {/*/>*/}
+          {/*{*/}
+            {/*this.state.redditNameError ?*/}
+                {/*<div>*/}
+                  {/*<h2 className="error">*/}
+                    {/*{ `"${this.state.redditNameError}"`} does not exist.*/}
+                    {/*Please make another request.*/}
+                  {/*</h2>*/}
+                {/*</div> :*/}
+                {/*<div>*/}
+                  {/*{*/}
+                    {/*this.state.redditSelected ?*/}
+                        {/*<div>*/}
+                          {/*<h2>Selected: {this.state.redditSelected.name}</h2>*/}
+                          {/*<h3>Abilities:</h3>*/}
+                          {/*{ this.renderAbilitiesList(this.state.redditSelected)}*/}
+                        {/*</div> :*/}
+                        {/*<div>*/}
+                          {/*Please make a request to see reddit data.*/}
+                        {/*</div>*/}
+                  {/*}*/}
+                {/*</div>*/}
+          {/*}*/}
 
         </section>
     );

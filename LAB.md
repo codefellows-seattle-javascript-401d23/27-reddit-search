@@ -26,7 +26,7 @@ App
 [ ] the state should have a topics array for holding the results of the search
 
 ###### SearchForm Component
-[ ] should contain a text input for the user to supply a reddit board to look up
+[ ] should contain a text input for the user to supply a reddit board to look up -Josh Form
 [ ] should contain a number input for the user to limit the number of results to return 
   [ ] the number must be more than 0 and less than 100
   [ ] `onSubmit` the form should make a request to reddit 

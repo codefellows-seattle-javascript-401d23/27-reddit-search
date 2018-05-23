@@ -5,7 +5,7 @@ import { render as reactDomRender } from 'react-dom';
 import superagent from 'superagent';
 import './style/main.scss';
 
-const apiUrl = 'http://reddit.com/r';
+const apiUrl = 'http://www.reddit.com/r';
 
 class RedditSearchForm extends React.Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class RedditSearchForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.redditSelected(this.state.subReddit);
+    this.props.redditSelect(this.state.subReddit);
   }
 
   render() {
@@ -70,7 +70,7 @@ class App extends React.Component {
         return console.error(err, 'line 69');
       }
     } else {
-      return superagent.get(apiUrl)
+      return superagent.get(`${apiUrl}/seattle.json?limit=5`)
         .then((response) => {
           console.log(response, 'line 74');
           const redditLookup = response.body.results.reduce((dict, result) => {
@@ -79,7 +79,7 @@ class App extends React.Component {
           }, {});
 
           try {
-            localStorage.redditLookup = JSON.stringify(redditLookup);
+            // localStorage.redditLookup = JSON.stringify(redditLookup);
             this.setState({ redditLookup: redditLookup });
           } catch (err) {
             console.log(err, 'line 84');

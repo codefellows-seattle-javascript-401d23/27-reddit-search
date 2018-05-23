@@ -1,0 +1,20 @@
+$background-color: #99fff1;
+$font-color: #6e6e6e;
+$error: #ff0000;
+$search-form: #019be2;
+
+html, body {
+  background: $background-color;
+}
+
+p, h1, h2, ul {
+  color: $font-color;
+}
+
+.error  input {
+  border: 3px solid red;
+}
+
+.search-form {
+  color: $search-form;
+}

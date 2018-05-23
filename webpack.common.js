@@ -15,9 +15,9 @@ webpackConfig.output = {
 };
 
 webpackConfig.plugins = [
-    new HtmlWebpackPlugin({
-      title: 'Josh Lab 27'
-    }),
+  new HtmlWebpackPlugin({
+    title: 'Josh lab 26',
+  }),
 ];
 
 webpackConfig.module = {};
@@ -25,7 +25,7 @@ webpackConfig.module.rules = [
   {
     test: /\.(png|svg|jpg|gif)$/,
     use: [
-        'file-loader',
+      'file-loader',
     ],
   },
   {
@@ -34,7 +34,7 @@ webpackConfig.module.rules = [
     use: {
       loader: 'babel-loader',
       options: {
-        presets: ['env', 'stage-o', 'react'],
+        presets: ['env', 'stage-0', 'react'],
         plugins: ['transform-react-jsx-source'],
         cacheDirectory: true,
       },

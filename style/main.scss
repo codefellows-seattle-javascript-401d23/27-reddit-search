@@ -1,0 +1,33 @@
+$background-color: #111;
+$font-color: #f0f0f0;
+$error-color: #f00;
+
+html, body {
+  max-width: 550px;
+  margin: 1rem auto;
+  font-family: sans-serif;
+  font-size: 18px;
+  background: $background-color;
+}
+
+p, h1, h2, h3, ul {
+  color: $font-color;
+}
+
+.error {
+  color: $error-color;
+}
+
+main {
+  padding: 1rem;
+}
+div {
+  padding: 1rem;
+}
+button {
+  border: 2px solid #fff;
+  font-size: 1em;
+  margin: auto;
+  padding: 0.3em 1.2em;
+  border-radius: 5px;
+}

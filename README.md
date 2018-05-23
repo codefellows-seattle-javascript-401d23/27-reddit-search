@@ -1,50 +1,39 @@
-![cf](http://i.imgur.com/7v5ASc8.png) 27: Reddit Search Engine
-===
+# LAB 27  REDDIT Reader
 
-## Submission Instructions
-  * Work in a fork of this repository
-  * Work in a branch on your fork
-  * Submit a pull request to this repository
-  * Submit a link to your pull request on canvas
-  * Submit a question, observation, and how long you spent on canvas  
-  
-## Learning Objectives  
-* Students will learn to manage controlled inputs
-* Students will learn to pass data from parent to child through props
+**Author**: Joshua Fredrickson
 
-## Requirements  
-#### Feature Tasks 
-Create the following components and structure them according to the following diagram 
-```
-App
-  SearchForm
-  SearchResultList
-``` 
-###### App Component
-* should contain all of the **application state** 
-* should contain methods for modifying the application state
-* the state should have a topics array for holding the results of the search
+**Version**: 1.0.0 
 
-###### SearchForm Component
-* should contain a text input for the user to supply a reddit board to look up
-* should contain a number input for the user to limit the number of results to return 
-  * the number must be more than 0 and less than 100
-  * `onSubmit` the form should make a request to reddit 
-  * it should make a get request to `http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`
-  * on success it should pass the results to the application state
-  * on failure it should add a class to the form called error and turn the form's inputs borders red
+## Overview
+Lab 27 is a reddit reader that gets information from reddit
 
-###### SearchResultList Component
-* Should inherit all search results through props
-* This component does not need to have its own state
-* If there are topics in the application state it should display an unordered list 
-* Each list item in the unordered list should contain the following
-  * an anchor tag with a href to the topic.url 
-    * inside the anchor a heading tag with the topic.title 
-    * inside the anchor a p tag with the number of topic.ups 
+## Getting Started
+ [npm](https://www.npmjs.com/) 
+(Node Package manager), and [Mongo DB](https://docs.mongodb.com/manual/installation/)  will need
+ to be locally installed.  Once Node.js, npm, Mongo DB have been installed, install the Lab  
+ files.  
+ Prior to starting the Lab 27 application, from the command line while you are in the Lab27  file 
+ folder, enter the command `npm i`.  This will download all needed dependencies for the 
+ application to run.   
 
-#### Test
-* no testing today
+## Architecture
+This application was deployed with the following technologies.
+Node.js, npm, body-parser, dotenv, babel, superagent, jest, eslint, JavaScript, React
 
-#### Documentation  
-Write a description of the project in your README.md
+
+## Change Log 
+Commits on May 23, 2018
+this code is not complete
+ 
+Commits on May 22, 2018
+7:30          update
+7:00          FORM FIELD has shown up
+6:00          code changes
+5:09          ~~~~~ here is were the refactoring is really begining~~~~…  …
+4:17          updated webpack.dev.js and added main.scss
+4:10          added webpack.dev.js
+4:05          added common.js
+3:58          beginning of scaffolding
+
+
+Special thanks to all of the Code Fellows staff and fellow 401-d23 students.

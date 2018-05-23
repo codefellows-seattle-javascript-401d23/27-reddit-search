@@ -1,18 +1,11 @@
 ![cf](http://i.imgur.com/7v5ASc8.png) 27: Reddit Search Engine
 ===
-
-## Submission Instructions
-  * Work in a fork of this repository
-  * Work in a branch on your fork
-  * Submit a pull request to this repository
-  * Submit a link to your pull request on canvas
-  * Submit a question, observation, and how long you spent on canvas  
   
-## Learning Objectives  
-* Students will learn to manage controlled inputs
-* Students will learn to pass data from parent to child through props
+## Project Description
+manage controlled inputs
+pass data from parent to child through props
 
-## Requirements  
+
 #### Feature Tasks 
 Create the following components and structure them according to the following diagram 
 ```
@@ -42,9 +35,4 @@ App
   * an anchor tag with a href to the topic.url 
     * inside the anchor a heading tag with the topic.title 
     * inside the anchor a p tag with the number of topic.ups 
-
-#### Test
-* no testing today
-
-#### Documentation  
-Write a description of the project in your README.md
+x

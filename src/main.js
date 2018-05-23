@@ -86,7 +86,7 @@ class SearchResultList extends React.Component {
     return (
       <div>
         {
-          this.props.searchResults ?
+          this.props.searchResults && this.props.searchResults.length > 1 ?
             <div>
               <h2>Results:</h2>
               { this.renderSearchResults(this.props.searchResults) }
@@ -163,7 +163,7 @@ class App extends React.Component {
           <h1>reddit search</h1>
         </header>
         <p>In the form below, please enter the subreddit name and number of search
-          results you would like to receive</p>
+          results you would like to receive.</p>
         <SearchForm searchHandle={this.subredditSearch} searchStatus={this.state.successfulSearch}/>
         {
           this.state.formClass ?

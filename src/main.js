@@ -53,7 +53,7 @@ class App extends React.Component {
     };
 
     this.redditSelect = this.redditSelect.bind(this);
-    this.renderSubRedditList = this.renderSubRedditList.bind(this);
+    this.renderSearchList = this.renderSearchList.bind(this);
   }
 
   componentDidUpdate() {
@@ -72,15 +72,15 @@ class App extends React.Component {
     } else {
       return superagent.get(`${apiUrl}/seattle.json?limit=5`)
         .then((response) => {
-          console.log(response, 'line 74');
-          const redditLookup = response.body.results.reduce((dict, result) => {
-            dict[result.name] = result.url;
+          console.log(response);
+          const subRedditLookup = response.body.data.children.reduce((dict, result) => {
+            dict[result.data.name] = [result.data.title, result.data.url.replace(/https/, 'http').replace(/\/$/, '.json'), result.data.ups];
             return dict;
           }, {});
-
+          console.log('dict', subRedditLookup);
           try {
             // localStorage.redditLookup = JSON.stringify(redditLookup);
-            this.setState({ redditLookup: redditLookup });
+            this.setState({ ssubRedditLookup: subRedditLookup });
           } catch (err) {
             console.log(err, 'line 84');
           }
@@ -108,7 +108,7 @@ class App extends React.Component {
     return undefined;
   }
 
-  renderSubRedditList(subReddit) {
+  renderSearchList(subReddit) {
     return (
       <ul>
         { subReddit.map((item, index) => {
@@ -146,10 +146,10 @@ class App extends React.Component {
                 </div>
                 <h2>Selected: {this.state.redditSelected}</h2>
                 <h3>SubReddits:</h3>
-                { this.renderSubRedditList(this.state.redditSelected)}
+                { this.renderSearchList(this.state.redditSelected)}
               </div> :
                 <div>
-                  Please make a request to see subReddits.
+                  Please make a request to see a list of sub-reddits.
                 </div>
             }
             </div>

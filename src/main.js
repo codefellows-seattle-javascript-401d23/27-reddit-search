@@ -3,26 +3,29 @@ import { render as reactDomRender } from 'react-dom';
 import superagent from 'superagent';
 import './style/main.scss';
 
-const apiUrl = 'https://pokeapi.co/api/v2/pokemon';
+const apiUrl = 'https://www.reddit.com/r';
 
-class PokemonSearchForm extends React.Component {
+class RedditSearchForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pokeName: '',
+      thingSearchedFor: '',
+      searchLimit: '',
     };
 
-    this.handlePokemonNameChange = this.handlePokemonNameChange.bind(this);
+    // this.handlePokemonNameChange = this.handlePokemonNameChange.bind(this);
+    this.searchFormBoard = this.searchFormBoard.bind(this);
+    // this.searchFormLimit = this.searchFormLimit.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handlePokemonNameChange(event) {
-    this.setState({ pokeName: event.target.value });
+  searchFormBoard(event) {
+    this.setState({ thingSearchedFor: event.target.value });
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.pokemonSelect(this.state.pokeName); // eslint-disable-line
+    this.props.redditSelect(this.state.thingSearchedFor); // eslint-disable-line
   }
 
   render() {
@@ -30,10 +33,10 @@ class PokemonSearchForm extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <input
           type="text"
-          name="pokemonName"
-          placeholder="Search for a Pokemon"
-          value={this.state.pokeName}
-          onChange={this.handlePokemonNameChange}
+          name="thing searched for"
+          placeholder="Search for a Reddit page"
+          value={this.state.thingSearchedFor}
+          onChange={this.searchFormBoard}
         />
       </form>
     );
@@ -44,121 +47,72 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pokemonLookup: {},
-      pokemonSelected: null,
-      pokemonNameError: null,
+      redditLookUp: {},
+      thingSearchedFor: null,
+      redditNameError: null,
+      searchLimit: null,
     };
 
-    this.pokemonSelect = this.pokemonSelect.bind(this);
-    this.renderAbilitiesList = this.renderAbilitiesList.bind(this);
+    this.redditSelect = this.redditSelect.bind(this);
+    this.renderSearchResults = this.renderSearchResults.bind(this);
   }
 
-  // built-in lifecycle hook from React, is invoked immediately after updating occurs
-  componentDidUpdate() {
-    console.log('__UPDATE STATE__', this.state);
-  }
-
-  // built-in lifecycle hook from React, invoked after component is rendered on the page 
-  componentDidMount() {
-    if (localStorage.pokemonLookup) {
-      try {
-        const pokemonLookup = JSON.parse(localStorage.pokemonLookup);
-        return this.setState({ pokemonLookup });
-        // return undefined;
-      } catch (err) {
-        return console.error(err);
-      }
-    } else {
-      return superagent.get(apiUrl)
-        .then((response) => {
-          console.log(response);
-          const pokemonLookup = response.body.results.reduce((dict, result) => {
-            dict[result.name] = result.url;
-            return dict;
-          }, {});
-
-          try {
-            localStorage.pokemonLookup = JSON.stringify(pokemonLookup);
-            this.setState({ pokemonLookup });
-          } catch (err) {
-            console.error(err);
-          }
-        })
-        .catch(console.error);
-    }
-  }
-
-  pokemonSelect(name) {
-    if (!this.state.pokemonLookup[name]) {
-      this.setState({
-        pokemonSelected: null,
-        pokemonNameError: name,
+  redditSelect(thingSearchedFor) {
+    return superagent.get(`${apiUrl}/${thingSearchedFor}.json?`)
+      .then((response) => {
+        this.setState({
+          thingSearchedFor: response.body,
+          redditResponseError: null,
+        });
+      }) 
+      .catch(() => {
+        this.setState({
+          redditResponseError: thingSearchedFor,
+        });
       });
-    } else {
-      return superagent.get(this.state.pokemonLookup[name])
-        .then((response) => {
-          this.setState({
-            pokemonSelected: response.body,
-            pokemonNameError: null,
-          });
-        })
-        .catch(console.error);
-    }
-    return undefined;
   }
-
-  renderAbilitiesList(pokemon) {
-    return (
+  
+  renderSearchResults(response) {
+    if (response !== null) {
+      return (
       <ul>
-        {pokemon.abilities.map((item, index) => {
+        {response.data.children.map((item, index) => {
           return (
             <li key={index}>
-              <p>{item.ability.name}</p>
+            <a href={item.data.url}>{item.data.title}</a>
+              <p>{item.data.ups}</p>
+
             </li>
           );
         })}
       </ul>
-    );
+      );
+    }
+    return undefined;
   }
-
 
   render() {
     return (
       <section>
-        <h1>Pokemon Form Demo</h1>
-        <PokemonSearchForm
-          pokemonSelect={this.pokemonSelect}
-        />
+        <h1>Search Topic</h1>
+        <RedditSearchForm redditSelect={this.redditSelect} />
         {
-          this.state.pokemonNameError ?
+          this.state.redditResponseError ?
             <div>
               <h2 className="error">
-                {`"${this.state.pokemonNameError}"`} does not exist.
-                Please make another request.
-              </h2>
+                {`"${this.state.redditResponseError}"`} does not exist
+            </h2>
             </div> :
             <div>
-              {
-                this.state.pokemonSelected ?
-                  <div>
-                    <div>
-                      <img src={this.state.pokemonSelected.sprites.front_default} />
-                    </div>
-                    <h2>Selected: {this.state.pokemonSelected.name}</h2>
-                    <h3>Abilities:</h3>
-                    {this.renderAbilitiesList(this.state.pokemonSelected)}
-                  </div> :
-                  <div>
-                    Please make a request to see pokemon data.
-                 </div>
-              }
+              <h2>Search result:</h2>
+              {this.renderSearchResults(this.state.thingSearchedFor)}
             </div>
         }
-
       </section>
     );
   }
 }
+
 
 const container = document.createElement('div');
 document.body.appendChild(container);

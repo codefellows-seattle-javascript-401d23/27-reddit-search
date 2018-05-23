@@ -1,21 +1,42 @@
-$background-color: #444;
-$list-background: #aaa;
-$font-color: #fff;
+$font-color: #000;
 $error: #ff0000;
 $font-family: Verdana;
+$small-font: 10px;
+$medium-font: 14px;
+$large-font: 16px;
+$reddit-blue: #d2e3f6;
+$reddit-light-blue: #f1f3fb;
+$reddit-grey: #ccccc7;
 
 html, body {
-  background: $background-color;
+  background: white;
   color: $font-color;
   font-family: $font-family;
+  width: 800px;
+  margin: auto;
+  font-size: $medium-font;
+  h2 {
+    font-weight: normal;
+  }
+}
+
+header {
+  background: $reddit-blue;
+  height: 80px;
+  line-height: 80px;
+  vertical-align: center;
+  text-align: center;
+  font-size: $large-font;
 }
 
 form {
-  margin: 10px;
+  margin: 10px 0px;
+  background: $reddit-grey;
+  text-align: center;
 
   input {
     margin: 10px;
-    width: 100px;
+    width: 200px;
   }
 }
 
@@ -31,15 +52,27 @@ a {
 ul {
   padding: 0px;
   margin: 0px;
-}
 
-li {
-  list-style: none;
-  background: $list-background;
-  padding: 10px;
-  margin: 10px auto;
+  li {
+    list-style: none;
+    background: $reddit-light-blue;
+    padding: 10px;
+    text-align: left;
+    margin: 10px auto;
+
+    h4, p, a {
+      margin: 5px auto;
+      font-size: $small-font;
+    }
+  }
 }
 
 .error {
   color: $error;
+}
+
+.form-error {
+  input {
+    border: 1px solid $error;
+  }
 }

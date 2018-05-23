@@ -27,16 +27,17 @@ class SearchForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.subredditSearch(this.state.subreddit, this.state.numberOfResults);
-    this.setState({ subreddit: '', numberOfResults: '' });
+    this.props.searchHandle(this.state.subreddit, this.state.numberOfResults);
+    this.setState({ subreddit: '', numberOfResults: '', formClass: '' });
   }
 
   render() {
     return (
-      <form onSubmit={ this.handleSubmit }>
+      <form onSubmit={ this.handleSubmit } className={this.state.formClass}>
         <input
           type='text'
           name='subreddit'
+          className={this.state.formClass}
           placeholder='Search a subreddit'
           value={ this.state.subreddit }
           onChange={ this.handleSubredditChange }
@@ -46,6 +47,7 @@ class SearchForm extends React.Component {
           type='number'
           name='numberOfResults'
           value={ this.state.numberOfResults }
+          className={this.state.formClass}
           placeholder='Desired number of results'
           onChange={ this.handleResultsChange }
           min='0'
@@ -70,7 +72,6 @@ class SearchResultList extends React.Component {
         { results.map((result, index) => {
           return (
             <a href={result.url} key={index}><li>
-              <img src={result.thumbnail}/>
               <h4>{result.title}</h4>
               <p>OP: {result.author}</p>
               <p>UPS: {result.ups}</p>
@@ -91,8 +92,8 @@ class SearchResultList extends React.Component {
               { this.renderSearchResults(this.props.searchResults) }
             </div> :
             <div>
-              <h2 className='error'>
-                { `"${this.props.subError}"` } does not exist or has less than { this.props.numError } posts.
+              <h2>
+                No results to display.
               </h2>
             </div>
         }
@@ -106,8 +107,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       topics: [],
-      subredditError: null,
-      numberError: null,
+      successfulSearch: true,
+      formClass: '',
     };
     this.subredditSearch = this.subredditSearch.bind(this);
   }
@@ -120,7 +121,7 @@ class App extends React.Component {
     if (localStorage.searchResults) {
       try {
         const searchResults = JSON.parse(localStorage.searchResults);
-        return this.setState({ topics: searchResults });
+        return this.setState({ topics: searchResults, successfulSearch: true, formClass: '' });
       } catch (err) {
         return console.error(err);
       }
@@ -139,35 +140,37 @@ class App extends React.Component {
             author: result.data.author,
             title: result.data.title,
             url: result.data.url,
-            thumbnail: result.data.preview.images[0].source.url,
             ups: result.data.ups,
           });
         });
         try {
           localStorage.searchResults = JSON.stringify(searchResults);
-          this.setState({ topics: searchResults, subredditError: null, numberError: null });
+          this.setState({ topics: searchResults, successfulSearch: true, formClass: '' });
         } catch (err) {
           console.error(err); // eslint-disable-line
         }
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ topics: null, subredditError: subreddit, numberError: num });
+        this.setState({ topics: null, successfulSearch: false, formClass: 'form-error' });
       }); // eslint-disable-line
   }
 
   render() {
     return (
-      <div>
-        <h1>reddit search</h1>
+      <div className={this.state.formClass}>
+        <header>
+          <h1>reddit search</h1>
+        </header>
         <p>In the form below, please enter the subreddit name and number of search
           results you would like to receive</p>
-        <SearchForm subredditSearch={this.subredditSearch}/>
-        <SearchResultList
-          searchResults={this.state.topics}
-          subError={this.state.subredditError}
-          numError={this.state.numberError}
-        />
+        <SearchForm searchHandle={this.subredditSearch} searchStatus={this.state.successfulSearch}/>
+        {
+          this.state.formClass ?
+            <p className='error'>Subreddit not found</p> :
+            <p> </p>
+        }
+        <SearchResultList searchResults={this.state.topics}/>
       </div>
     );
   }

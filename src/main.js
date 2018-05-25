@@ -11,7 +11,7 @@ class SearchForm extends React.Component {
     super(props);
     this.state = {
       redditBoard: '',
-      limit: '',
+      limit: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -29,7 +29,7 @@ class SearchForm extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.redditBoardSelect(this.state.redditBoard);
+    this.props.redditBoardSelect(this.state.redditBoard, this.state.limit);
   }
 
   render() {
@@ -42,111 +42,94 @@ class SearchForm extends React.Component {
           value={this.state.redditBoard}
           onChange={this.handleChange}
         />
+        <input
+          type="number"
+          name="limit"
+          placeholder="limit"
+          value={this.state.limit}
+          onChange={this.handleLimitChange}
+        />
+        <button type='submit'>Submit</button>
       </form>
     );
   }
 }
 
-// class SearchResultList extends React.Component {
-//   constructor(props) {
-//     super(props);
+class SearchResultList extends React.Component {
 
-//     this.renderRedditBoardList = this.renderRedditBoardList.bind(this);
-//   }
-
-//   renderRedditBoardList(board) {
-//     this.setState({ renderRedditBoardList: board.map(item, index) });
-//   }
-
-//   render() {
-//     return (
-//       <ul>
-//         <li key={index}>
-//           <a href={item.url}>{item.title}<p>{item.ups}</p></a>
-//         </li>
-//       </ul>
-//     );
-//   }
-// }
+  render() {
+    return (
+      <div>
+        {
+          this.props.topics ?
+          <div>
+            Please enter a reddit board.
+          </div> :
+          <div>
+            <h3>Boards:</h3>
+            <ul>
+              { this.props.topics.map((topic, index) => {
+                console.log(topic);
+                return (
+                  <li key={index}>
+                    <a href={topic.data.url}>
+                    <h2>{topic.data.title}</h2>
+                    <p>{topic.data.ups}</p>
+                    </a>
+                  </li>
+                );
+              }) }
+            </ul>
+          </div>
+        }
+      </div>
+    );
+  }
+}
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      redditBoardSelected: null,
-      redditBoardError: null,
+      topics: [],
+      error: null,
     };
 
     this.redditBoardSelect = this.redditBoardSelect.bind(this);
   }
 
-  redditBoardSelect(board) {
-    if (!`${apiUrl}/penguins.json?limit=5`) {
-      this.setState({
-        redditBoardSelected: null,
-        redditBoardError: name,
-      });
-    } else {
-      return superagent.get(`${apiUrl}/penguins.json?limit=5`) 
-        .then((response) => {
-          console.log(response);
-          const subRedditLookup = response.body.data.children.reduce((dict, result) => {
-            dict[result.data.name] = [result.data.title, result.data.url.replace(/https/, 'http').replace(/\/$/, '.json'), result.data.ups];
-            return dict;
-          }, {});
-          console.log('dict', subRedditLookup);
-          try {
-            localStorage.subRedditLookup = JSON.stringify(subRedditLookup);
-            this.setState({ subRedditLookup });
-          } catch (error) {
-            console.error(error);
-          }
-        })
-        .catch(console.error);
+  redditBoardSelect(board, limit) { 
+    if (!`${apiUrl}/${board}.json?limit=${limit}`) {
+      return this.setState({ error: true });
     }
+
+    return superagent.get(`${apiUrl}/${board}.json?limit=${limit}`)
+      .then((response) => {
+        console.log(response.body.data.children);
+        return this.setState(() => {
+          return {
+            topics: response.body.data.children,
+            error: null,
+          };
+        });
+      });
   }
 
-  renderRedditBoardList(board) {
-    return (
-      <ul>
-        { board.map((item, index) => {
-          return (
-            <li key={index}>
-              <a href={item.url}>{item.title}<p>{item.ups}</p></a>
-            </li>
-          );
-        })}
-      </ul>
-    );
-  }
- 
   render() {
     return (
       <section>
         <h1>Reddit Form</h1>
-        <SearchForm 
-          redditBoardSelect={this.redditBoardSelect}
-        />
-        { 
-          this.state.redditBoardError ? 
-            <div>
-              <h2 className="error">
-                { `"${this.state.redditBoardError}"`} does not exist.
-                Please make another request.
-              </h2>
-            </div> : 
-            <div>
-              {
-                this.state.redditBoardSelected ?
-                <div>
-                  <h3>Boards:</h3>
-                  { this.renderRedditBoardList(this.state.redditBoardSelected) }
-                </div> :
-                <div>
-                  Please make a request to see reddit board data.
-                </div>
-              }
-            </div>
+        <SearchForm redditBoardSelect={this.redditBoardSelect}/>
+        {
+          this.state.error ?
+          <div>
+            <h2 className='error'>
+            {`${this.state.error}`}
+            </h2>
+          </div> :
+          <div>
+            <SearchResultList topics={this.state.topics}/>
+          </div>
         }
       </section>
     );

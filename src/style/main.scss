@@ -1,0 +1,21 @@
+$background-color: #000000;
+$font-color: #ffffff;
+$error: #ff0000;
+
+html, body {
+  background: $background-color;
+}
+
+p, h1, h2, ul {
+  color: $font-color;
+}
+
+.error {
+  color: $error;
+}
+
+.error-on-form {
+  input {
+    border: 1px solid $error;
+  }
+}

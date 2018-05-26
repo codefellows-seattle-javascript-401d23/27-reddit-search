@@ -13,3 +13,9 @@ p, h1, h2, ul {
 .error {
   color: $error;
 }
+
+.error-on-form {
+  input {
+    border: 1px solid $error;
+  }
+}

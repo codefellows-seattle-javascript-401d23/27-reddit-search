@@ -4,7 +4,6 @@ import superagent from 'superagent';
 import './style/main.scss';
 
 const apiUrl = 'http://www.reddit.com/r';
-// /${searchFormBoard}.json?limit=${searchFormLimit}
 
 class SearchForm extends React.Component {
   constructor(props) {
@@ -56,20 +55,15 @@ class SearchForm extends React.Component {
 }
 
 class SearchResultList extends React.Component {
-
   render() {
     return (
       <div>
         {
           this.props.topics ?
           <div>
-            Please enter a reddit board.
-          </div> :
-          <div>
             <h3>Boards:</h3>
             <ul>
               { this.props.topics.map((topic, index) => {
-                console.log(topic);
                 return (
                   <li key={index}>
                     <a href={topic.data.url}>
@@ -80,6 +74,9 @@ class SearchResultList extends React.Component {
                 );
               }) }
             </ul>
+          </div> :
+          <div>
+            Please enter a reddit board.
           </div>
         }
       </div>
@@ -105,7 +102,6 @@ class App extends React.Component {
 
     return superagent.get(`${apiUrl}/${board}.json?limit=${limit}`)
       .then((response) => {
-        console.log(response.body.data.children);
         return this.setState(() => {
           return {
             topics: response.body.data.children,

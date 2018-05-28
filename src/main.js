@@ -9,11 +9,12 @@ class SearchForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      board: 'cats',
-      limit: 5,
+      board: '',
+      limit: '',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleBoardChange = this.handleBoardChange.bind(this);
+    this.handleLimitChange = this.handleLimitChange.bind(this);
   }
   handleSubmit(event) {
     event.preventDefault();
@@ -21,6 +22,9 @@ class SearchForm extends React.Component {
   }
   handleBoardChange(event) {
     this.setState({ board: event.target.value });
+  }
+  handleLimitChange(event) {
+    this.setState({ limit: event.target.value });
   }
 
   render() {
@@ -38,6 +42,8 @@ class SearchForm extends React.Component {
           <input
             type='number'
             name='limit'
+            value={this.state.limit}
+            onChange={this.handleLimitChange}
           />
           <button type='submit'>Submit</button>
         </form>

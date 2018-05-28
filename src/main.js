@@ -42,6 +42,7 @@ class SearchForm extends React.Component {
           <input
             type='number'
             name='limit'
+            placeholder='Enter a results limit'
             value={this.state.limit}
             onChange={this.handleLimitChange}
           />
@@ -54,7 +55,6 @@ class SearchForm extends React.Component {
 
 class SearchResultList extends React.Component {
   render() {
-    console.log(this.props);
     return (
     <div>
       <h3>Search Results</h3>
@@ -81,7 +81,6 @@ class App extends React.Component {
     };
 
     this.getTopics = this.getTopics.bind(this);
-    // this.boardSelect = this.boardSelect.bind(this);
   }
 
   getTopics(board, limit) {
@@ -91,16 +90,9 @@ class App extends React.Component {
         this.setState({
           topics: response.body.data.children,
         });
-        console.log(this.state);
       })
       .catch(console.error);
   }
-
-  // boardSelect(board, limit) {
-  //   const apiUrl = `http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`;
-  //   return superagent.get(apiUrl)
-  //     .then()
-  // }
 
   render() {
     return (

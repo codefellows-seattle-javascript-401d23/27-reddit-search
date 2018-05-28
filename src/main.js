@@ -1,185 +1,151 @@
 import React from 'react';
-import { render as reactDomRender } from 'react-dom'; 
+import { render as reactDomRender } from 'react-dom';
 import superagent from 'superagent';
 import './style/main.scss';
 
 const apiURL = 'http://www.reddit.com/r';
-// /${searchFormBoard}.json?limit=${searchFormLimit}';
-// response.children.reduce((a,b) )
 
 class SearchForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      subName: '',
+      searchFormBoard: '',
+      searchFormLimit: 0,
+      searchFormClass: 'searchForm',
+      prePostSearchClass: 'preSearch',
+      inputClass: '',
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleBoardChange = this.handleBoardChange.bind(this);
+    this.handleLimitChange = this.handleLimitChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(e) {
-    this.setState({ subName: e.target.value });
+  handleBoardChange(e) {
+    this.setState({ searchFormBoard: e.target.value });
+  }
+
+  handleLimitChange(e) {
+    this.setState({ searchFormLimit: e.target.value });
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.subRedditSelect(this.state.subName); // eslint-disable-line
+    if (this.state.searchFormBoard === '') {
+      this.setState({
+        searchFormClass: 'error',
+        inputClass: 'error',
+      });
+    } else {
+      this.setState({
+        searchFormClass: 'searchForm',
+        prePostSearchClass: 'postSearch',
+        inputClass: '',
+      });
+    }
+    this.props.subRedditSelect(this.state.searchFormBoard, this.state.searchFormLimit); // eslint-disable-line
   }
 
   render() {
     return (
+      <section className={this.state.searchFormClass}>
       <form onSubmit={this.handleSubmit}>
         <input
           type='text'
-          name='subRedditName'
+          name='searchBoardForm'
           placeholder='Search for a sub reddit.'
-          value={this.state.subName}
-          onChange={this.handleChange}
+          value={this.state.searchFormBoard}
+          onChange={this.handleBoardChange}
+          className={this.state.inputClass}
         />
+        <input
+          type='number'
+          min='0'
+          max='100'
+          name='searchLimit'
+          placeholder='Set limit for search results.'
+          value={this.state.searchFormLimit}
+          onChange={this.handleLimitChange}
+          className={this.state.inputClass}
+        />
+        <button type='submit'>Search</button>
       </form>
+      {
+        (this.state.searchFormClass === 'error') ? <h1>INVALID INPUT!</h1> : <h1 className={this.state.prePostSearchClass}>Search Results: </h1>
+      }
+      </section>
     );
   }
 }
 
-// class SearchResultList extends React.Component {
-//   render() {
-//     return (
-//   <ul>
-//   {this.props.subRedditLookup.map((item, index) => {
-//     return (
-//       <li key={index}>
-//         <h2>{item.title}</h2>
-//         <p>{item.url}</p>
-//         <p>{item.ups}</p>
-//       </li>
-//     );
-//   })}
-// </ul>
-//     );
-//   }
-// }
-
-class App extends React.Component {
+class SearchFormResults extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      subRedditLookup: {},
-      subRedditSelected: null,
-      subRedditNameError: null,
-    };
-
-    this.subRedditSelect = this.subRedditSelect.bind(this);
-    this.renderSubRedditList = this.renderSubRedditList.bind(this);
+    this.renderTopics = this.renderTopics.bind(this);
   }
 
-  componentDidUpdate() {
-    console.log('__UPDATE STATE__', this.state);
-  }
-
-  componentDidMount() {
-    if (localStorage.subRedditLookup) {
-      try {
-        const subRedditLookup = JSON.parse(localStorage.subRedditLookup);
-        return this.setState({ subRedditLookup });
-      } catch (error) {
-        return console.error(error);
-      }
-    } else {
-      return superagent.get(`${apiURL}/dogs.json?limit=5`) 
-        .then((response) => {
-          console.log(response);
-          const subRedditLookup = response.body.data.children.reduce((dict, result) => {
-            dict[result.data.name] = [result.data.title, result.data.url.replace(/https/, 'http').replace(/\/$/, '.json'), result.data.ups];
-            return dict;
-          }, {});
-          console.log('dict', subRedditLookup);
-          try {
-            // localStorage.subRedditLookup = JSON.stringify(subRedditLookup);
-            this.setState({ subRedditLookup });
-          } catch (error) {
-            console.error(error);
-          }
-        })
-        .catch(console.error);
-    }
-  }
-
-  subRedditSelect(name) {
-    if (!this.state.subRedditLookup[name]) {
-      this.setState({
-        subRedditSelected: null,
-        subRedditNameError: name,
-      });
-    } else {
-      return superagent.get(`${apiURL}/dogs.json?limit=5`) 
-        .then((response) => {
-          console.log(response);
-          const subRedditLookup = response.body.data.children.reduce((dict, result) => {
-            dict[result.data.name] = [result.data.title, result.data.url.replace(/https/, 'http').replace(/\/$/, '.json'), result.data.ups];
-            return dict;
-          }, {});
-          console.log('dict', subRedditLookup);
-          try {
-            localStorage.subRedditLookup = JSON.stringify(subRedditLookup);
-            this.setState({ subRedditLookup });
-            console.log('SELECTED', subRedditLookup);
-          } catch (error) {
-            console.error(error);
-          }
-        })
-        .catch(console.error);
-    }
-    return null;
-  }
-
-  renderSubRedditList(name) {
-    console.log(':::::NAME:::::', name);
-    const nameArray = name.toArray();
-    console.log('namearray', nameArray);
+  renderTopics(topics) {
     return (
       <ul>
-        {name.map((item, index) => {
-          return (
-            <li key={index}>
-              <h2>{item.title}</h2>
-              <p>{item.url}</p>
-              <p>{item.ups}</p>
-            </li>
-          );
-        })}
+        { topics.map((item, index) => {
+            return (
+              <li key={index} className='listItem'>
+              <a href={item.data.url}>
+              <p className='listTitle'>{item.data.title}</p>
+              <p className='listUps'>{item.data.ups}</p>
+              </a>
+              </li>
+            );
+          })}
       </ul>
     );
   }
 
   render() {
     return (
-      <section>
-        <h1>SubReddit Search Demo</h1>
+      <section className='searchFormResults'>
+        { 
+          this.renderTopics(this.props.topics)//eslint-disable-line 
+        }
+      </section>
+    );
+  }
+}
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      topics: [],
+    };
+
+    this.subRedditSelect = this.subRedditSelect.bind(this);
+  }
+
+  componentDidUpdate() {
+    console.log('__UPDATE STATE__', this.state);
+  }
+
+  subRedditSelect(board, limit) {
+    return superagent.get(`${apiURL}/${board}.json?limit=${limit}`) 
+      .then((response) => {
+        this.setState({
+          topics: response.body.data.children,
+        });
+      })
+      .catch(console.error);
+  }
+
+  render() {
+    return (
+      <section className='app'>
+        <h1 className='headerTitle'>SubReddit Search Demo</h1>
         <SearchForm
           subRedditSelect={this.subRedditSelect}
         />
-        { 
-          this.state.subRedditNameError ? 
-            <div>
-              <h2 className="error">
-                { `"${this.state.subRedditNameError}"`} does not exist.
-                Please make another request.
-              </h2>
-            </div> : 
-            <div>
-               {
-                 this.state.subRedditSelected ? 
-                 <div>
-                   <h3>Articles:</h3>
-                   { this.renderSubRedditList(this.state.subRedditLookup)}
-                 </div> :
-                 <div>
-                   Please make a request to see subReddit data.
-                 </div>
-               }
-            </div>
-        }
+        <div>
+          <SearchFormResults topics={this.state.topics}/>
+        </div>
       </section>
     );
   }

@@ -66,7 +66,10 @@ class SearchResultList extends React.Component {
         {this.props.topicsList.map((article, index) => {
           return (
             <li key={index}>
-              <p><a href={article.data.url} target='_blank'>{article.data.title}</a></p>
+              <a href={article.data.url} target='_blank'>
+                <h3>{article.data.title}</h3>
+                <p>Number of Ups: {article.data.ups}</p>
+              </a>
             </li>
           );
         })}

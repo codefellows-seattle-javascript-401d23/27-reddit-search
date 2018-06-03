@@ -17,7 +17,7 @@ html, body {
   background: $background-color;
 }
 
-p, h1, h2, h3, ul, li, a{
+p, h1, h2, h3{
   color: $font-color;
 }
 
@@ -54,9 +54,6 @@ body {
   min-height: 80vh;
 }
 
-p, h1, h2, h3, ul {
-  color: $font-color;
-}
 ul {
   padding-left: 0;
 }
@@ -96,11 +93,19 @@ button {
   li{
     list-style-type: none;
     padding: 0 0.5em;
-    a {
+    a,
+    a h3,
+    a p {
       color: $link-color;
       text-decoration: none;
+      margin-bottom: 0;
+      margin-top: 0;
       &:hover, &:focus{
         color: $link-hover-color;
       }
     }
+    a p {
+      margin-bottom: 1em;
+    }
+
   }

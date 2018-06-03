@@ -88,6 +88,13 @@ class App extends React.Component {
 
   getTopics(board, limit) {
     const apiUrl = `https://www.reddit.com/r/${board}.json?limit=${limit}`;
+    if (limit < 0 || limit > 100) {
+      this.setState({
+        topics: [{ data: { title: 'Limit must be between 0 and 100.' } }],
+        errorStatus: 'error',
+      });
+      return undefined;
+    }
     return superagent.get(apiUrl)
       .then((response) => {
         this.setState({

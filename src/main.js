@@ -33,7 +33,9 @@ class SearchForm extends React.Component {
     return (
       <div>
         <h3>Search Form</h3>
-        <form onSubmit={this.handleSubmit}>
+        <form
+          className={this.props.errorStatus}
+          onSubmit={this.handleSubmit}>
           <input
             type='text'
             name='redditBoard'
@@ -58,7 +60,7 @@ class SearchForm extends React.Component {
 class SearchResultList extends React.Component {
   render() {
     return (
-    <div>
+    <div className={this.props.errorStatus}>
       <h3>Search Results</h3>
       <ul>
         {this.props.topicsList.map((article, index) => {
@@ -107,18 +109,21 @@ class App extends React.Component {
           topics: [{ data: { title: 'Board Not Found' } }],
           errorStatus: 'error',
         });
-        console.error(err);
+        console.error(err); // eslint-disable-line
       });
   }
 
   render() {
     return (
-      <section className={this.state.errorStatus}>
+      <section>
         <h1>Reddit Topics Search</h1>
          <SearchForm
+           errorStatus={this.state.errorStatus}
            getTopics = {this.getTopics}
          />
-         <SearchResultList topicsList={ this.state.topics }/>
+         <SearchResultList
+           errorStatus={this.state.errorStatus}
+           topicsList={ this.state.topics }/>
       </section>
     );
   }

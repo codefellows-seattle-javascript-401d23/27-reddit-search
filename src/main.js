@@ -64,11 +64,15 @@ class SearchResultList extends React.Component {
       <h3>Search Results</h3>
       <ul>
         {this.props.topicsList.map((article, index) => {
+          let upsMessage = '';
+          if (this.props.errorStatus !== 'error') {
+            upsMessage = `Number of Ups: ${article.data.ups}`;
+          }
           return (
             <li key={index}>
               <a href={article.data.url} target='_blank'>
                 <h3>{article.data.title}</h3>
-                <p>Number of Ups: {article.data.ups}</p>
+                <p>{upsMessage}</p>
               </a>
             </li>
           );

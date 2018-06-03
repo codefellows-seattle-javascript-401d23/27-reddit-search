@@ -20,9 +20,11 @@ class SearchForm extends React.Component {
     event.preventDefault();
     this.props.getTopics(this.state.board, this.state.limit);
   }
+
   handleBoardChange(event) {
     this.setState({ board: event.target.value });
   }
+
   handleLimitChange(event) {
     this.setState({ limit: event.target.value });
   }
@@ -78,6 +80,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       topics: [],
+      errorStatus: '',
     };
 
     this.getTopics = this.getTopics.bind(this);
@@ -89,16 +92,25 @@ class App extends React.Component {
       .then((response) => {
         this.setState({
           topics: response.body.data.children,
+          errorStatus: 'board-found',
         });
       })
-      .catch(console.error);
+      .catch((err) => {
+        this.setState({
+          topics: [{ data: { title: 'Board Not Found' } }],
+          errorStatus: 'error',
+        });
+        console.error(err);
+      });
   }
 
   render() {
     return (
-      <section>
+      <section className={this.state.errorStatus}>
         <h1>Reddit Topics Search</h1>
-         <SearchForm getTopics = {this.getTopics} />
+         <SearchForm
+           getTopics = {this.getTopics}
+         />
          <SearchResultList topicsList={ this.state.topics }/>
       </section>
     );

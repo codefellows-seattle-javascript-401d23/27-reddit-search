@@ -21,7 +21,10 @@ p, h1, h2, h3, ul, li, a{
   color: $font-color;
 }
 
-.error {
+.error,
+.error li a,
+.error li a:hover,
+.error li a:focus {
   color: $error-color;
 }
 
@@ -76,6 +79,14 @@ input, button {
   margin-bottom: 0.5em;
   padding: 0.3em 1.2em;
   border-radius: 5px;
+}
+input {
+  .error & {
+    border-color: $error-color;
+    &:focus {
+      outline-color: $error-color;
+    }
+  }
 }
 button {
   border-color: $accent-color-1;

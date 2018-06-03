@@ -1,0 +1,111 @@
+$background-color: #ededed;
+$font-color: #333;
+
+$accent-color-1: green;
+
+$error-color: #f00;
+
+
+$link-color: darken($accent-color-1, 5%);
+$link-hover-color: lighten($link-color, 15%);
+
+html, body {
+  max-width: 550px;
+  margin: 1rem auto;
+  font-family: sans-serif;
+  font-size: 18px;
+  background: $background-color;
+}
+
+p, h1, h2, h3{
+  color: $font-color;
+}
+
+.error,
+.error li a,
+.error li a:hover,
+.error li a:focus {
+  color: $error-color;
+}
+
+main {
+  padding: 1rem;
+}
+div {
+  padding: 1rem;
+}
+button {
+  border: 2px solid #fff;
+  font-size: 1em;
+  margin: auto;
+  padding: 0.3em 1.2em;
+  border-radius: 5px;
+}
+
+body {
+  max-width: 650px;
+  margin: 1rem auto;
+  padding: 0.5rem 2rem;
+  border: 1px solid;
+  border-radius: 10px;
+  font-family: sans-serif;
+  font-size: 18px;
+  background: $background-color;
+  min-height: 80vh;
+}
+
+ul {
+  padding-left: 0;
+}
+
+h1 + p {
+  margin-top: 0;
+}
+
+.error {
+  color: $error-color;
+}
+
+input, button {
+  min-width: 12em;
+  font-size: 1em;
+  margin-bottom: 0.5em;
+  padding: 0.3em 1.2em;
+  border-radius: 5px;
+}
+input {
+  .error & {
+    border-color: $error-color;
+    &:focus {
+      outline-color: $error-color;
+    }
+  }
+}
+button {
+  border-color: $accent-color-1;
+  background-color: $accent-color-1;
+  color: #fff;
+  margin-right: 0.5em;
+  &:hover, &:focus {
+    opacity: 0.8;
+  }
+}
+  li{
+    list-style-type: none;
+    padding: 0 0.5em;
+    a,
+    a h3,
+    a p {
+      color: $link-color;
+      text-decoration: none;
+      margin-bottom: 0;
+      margin-top: 0;
+      &:hover, &:focus{
+        color: $link-hover-color;
+      }
+    }
+    a p {
+      margin-bottom: 1em;
+    }
+
+  }
